@@ -143,18 +143,18 @@ function getXML(file, skipData   ,end,p,q,tag,att,accu,mline,mode,S0,ex,dtd) {
         }
         else if (mode == "DAT") {
             p = index(S0, "<");
-            if (dtd && (q = index(S0, "]")) && (!p || q < p)) p=q;
+            if (dtd && (q = index(S0, "]")) && (!p || q < p)) p = q;
             if (p) {
                 if (!skipData) {
                     XTYPE = "DAT";
-                    XITEM = accu unescapeXML(substr(S0, 1, p-1));
+                    XITEM = accu unescapeXML(substr(S0, 1, p - 1));
                 }
                 S0 = substr(S0, p);
                 mode = "";
             }
             else {
                 if (!skipData) accu = accu unescapeXML(S0);
-                S0="";
+                S0 = "";
             }
         }
         else if (mode == "TAG") {
@@ -230,14 +230,14 @@ function getXML(file, skipData   ,end,p,q,tag,att,accu,mline,mode,S0,ex,dtd) {
         else if (mode == "DTB") { # terminated by "[" or ">"
             if ((q = index(S0, "[")) && (!(p = index(S0, end)) || q < p )) {
                 XTYPE = mode;
-                XITEM = accu substr(S0, 1, q-1);
-                S0 = substr(S0, q+1);
+                XITEM = accu substr(S0, 1, q - 1);
+                S0 = substr(S0, q + 1);
                 mode = "";
                 dtd = 1;
             }
             else if (p = index(S0, end)) {
                 XTYPE = mode;
-                XITEM = accu substr(S0, 1, p-1);
+                XITEM = accu substr(S0, 1, p - 1);
                 S0 = "]" substr(S0, p);
                 mode = "";
                 dtd = 1;
@@ -249,7 +249,7 @@ function getXML(file, skipData   ,end,p,q,tag,att,accu,mline,mode,S0,ex,dtd) {
         }
         else if (p = index(S0, end)) {  # terminated by end
             XTYPE = mode;
-            XITEM = (mode == "END" ? tag : accu substr(S0, 1, p-1));
+            XITEM = (mode == "END" ? tag : accu substr(S0, 1, p - 1));
             S0 = substr(S0, p + length(end));
             mode = "";
         }
@@ -259,22 +259,22 @@ function getXML(file, skipData   ,end,p,q,tag,att,accu,mline,mode,S0,ex,dtd) {
         }
     }
 
-    _XMLIO[file,"S0"]=S0; _XMLIO[file,"line"]=XLINE;
-    _XMLIO[file,"path"]=XPATH; _XMLIO[file,"dtd"]=dtd;
-    if (mode=="DAT") {
+    _XMLIO[file, "S0"] = S0; _XMLIO[file, "line"] = XLINE;
+    _XMLIO[file, "path"] = XPATH; _XMLIO[file, "dtd"] = dtd;
+    if (mode == "DAT") {
         mode = "";
-        if (accu != "") XTYPE="DAT";
-        XITEM=accu;
+        if (accu != "") XTYPE = "DAT";
+        XITEM = accu;
     }
     if (XTYPE) {
         XNODE = XTYPE "\001" XITEM "\001" XNODE;
         return 1;
     }
     close(file);
-    delete _XMLIO[file,"S0"];
-    delete _XMLIO[file,"line"];
-    delete _XMLIO[file,"path"];
-    delete _XMLIO[file,"dtd"];
+    delete _XMLIO[file, "S0"];
+    delete _XMLIO[file, "line"];
+    delete _XMLIO[file, "path"];
+    delete _XMLIO[file, "dtd"];
     if (XERROR) XERROR = file ":" XLINE ": " XERROR;
     else if (mode) XERROR = file ":" mline ": " "unterminated " mode;
     else if (XPATH) XERROR = file ":" XLINE ": "  "unclosed tag(s) " XPATH;
